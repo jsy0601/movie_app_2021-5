@@ -10,11 +10,20 @@ const foodLike = [
     image: "https://src.hidoc.co.kr/image/lib/2020/11/9/1604911318873_0.jpg"
   }
 ]
+
+// function renderFood(dish) {
+//   return (
+//     <Food name={dish.name} picture={dish.image} />
+//   )
+// }
+
+const renderFood = dish => <Food name={dish.name} picture={dish.image} />
+
 function App() {
   return (
     <div>
       {
-        foodLike.map(dish => (<Food name={dish.name} picture={dish.image} />))
+        foodLike.map(renderFood)
       }
     </div>
   )
