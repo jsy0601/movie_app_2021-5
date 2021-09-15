@@ -1,4 +1,4 @@
-import Potato from './Potato'
+import { scryRenderedDOMComponentsWithClass } from "react-dom/test-utils"
 
 const foodLike = [
   {
@@ -13,15 +13,19 @@ const foodLike = [
 function App() {
   return (
     <div>
-      <h1>Hello</h1>
-      <Food fav="kimchi" />
-      <Potato foo="you" />
+      {
+        foodLike.map(dish => (<Food name={dish.name} picture={dish.image} />))
+      }
     </div>
   )
 }
 
-function Food(foo) {
-  const { fav } = foo
-  return <h1>I like {fav}</h1>
+function Food({name, picture}) {
+  return (
+    <div>
+      <h2>I like {name}</h2>
+      <img src={picture} />
+  </div>
+  )
 }
 export default App
