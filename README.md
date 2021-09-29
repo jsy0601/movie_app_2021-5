@@ -1,5 +1,108 @@
 # 정서연 202030428
 
+## [ 09월 29일 ]
+### ✔ 음식 앱에 prop-types 도입하기
+- props의 값이 컴포넌트에 제대로 전달되지 않으면? props를 검사하는 방법이 필요
+
+### ✔ 음식 데이터에 rating 추가
+- 값의 자료형은 number
+
+### ✔ prop-types 설치
+> npm install prop-types
+
+### ✔ prop-types 적용하기
+- import PropTypes(이름 상관x) from 'prop-types' 추가
+- rating props를 Food 컴포넌트에 전달
+
+### ✔ Food.propTypes 작성하기
+
+### ✔ State와 클래스형 컴포넌트
+- props는 정적인 데이터만 다룰 수 있다
+- state는 동적인 데이터를 다루기 위해 사용된다
+- state는 class형 컴포넌트에서 사용된다
+
+### ✔ 클래스형 컴포넌트
+> class App extends React.Component {
+
+} 
+- React.Component 상속받은 App클래스
+
+### ✔ render() 함수
+- 함수형 컴포넌트는 return문이 JSX를 반환
+- 클래스형 컴포넌트는 render() 함수가 JSX를 반환
+- 직접 실행하지 않아도 실행되는 함수
+```javascript
+import {Component} from 'react'
+
+class App extends Component {
+    render() {
+        return (
+            <h1>Hello</h1>
+        )
+    }
+}
+
+export default App
+```
+### ✔ state 정의하기
+- class 안에 state = {}
+- 객체형태의 데이터
+- 반드시 class형 컴포넌트 안에서 소문자를 사용하여 state라고 적는다
+- state에 count라는 키 추가, 키값을 0
+- render()함수에서 {this.state.count} 출력
+
+### ✔ 버튼 눌러서 count state값 변경
+
+### ✔ add() 함수와 minus() 함수 작성
+
+### ✔ 버튼을 누르면 동작하도록 onClick 속성 추가
+
+### ✔ this.state.count 마음대로 바꿔 보기
+- 동작 X
+- 리액트는 state를 직접 변경하지 못하게 하기 때문
+
+### ✔ setState() 함수로 count state 변경하기
+```javascript
+add = () => {
+        this.setState({count: 1})
+    }
+
+    minus = () => {
+        this.setState({count: -1})
+    }
+```
+### ✔ state의 변화에 따라 바뀌는 HTML
+- 버튼을 번갈아 누르면 변경된 state의 값을 변경하려고 HTML만 바뀜
+- 리액트가 화면 구성이 빠르다(필요한 부분만 바뀌니까)
+
+### ✔ add, minus() 함수 개선하기
+```javascript
+add = () => {
+        this.setState(current => ({
+            count: current.count +1
+        }))
+    }
+
+    minus = () => {
+        this.setState(current => ({
+            count: current.count -1
+        }))
+    }
+```
+
+### ✔ constructor() 함수
+- Component를 생성할 때 state 값을 초기화하거나 메서드를 바인딩할 때 사용한다
+- React.Component를 상속해서 만들어진 컴포넌트의 생성자를 구현할 때는 super(props)를 반드시 사용하는 이유는 this.props 사용 시 생성자 내에서 정의되지 않아 버그 발생 가능성이 있기 때문
+- 생성자 내에서 외부 API 직접 호출 불가능 필요하면 componentDidMount()를 사용
+
+### ✔ componentDidMount() 함수
+
+> render(), contructor(), componentDidMount()가 리액트에서 마운트로 분류하는 생명주기 함수
+![image](https://user-images.githubusercontent.com/70794506/135222872-ced67fee-4ac2-4dac-927b-abe6ea1cffb8.png)
+
+> componentDidUpdate() 함수는 업데이트로 분류한 생명주기 함수
+![image](https://user-images.githubusercontent.com/70794506/135223079-53c5973a-6c6b-40ff-a181-2ccb211ea153.png)
+
 ## [ 09월 15일 ]
 ### ✔ Potato 컴포넌트 사용하기
 - JSX요소는 반드시 하나의 태그로 감싸야 한다.
