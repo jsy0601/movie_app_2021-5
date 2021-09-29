@@ -37,9 +37,9 @@ function Food({name, picture, rating}) {
   )
 }
 
-Food.PropTypes = {
+Food.ProtoTypes = {
   name: PropTypes.string.isRequired,
   picture: PropTypes.string.isRequired,
-  rating: PropTypes.number.isRequired
+  rating: PropTypes.number
 }
 export default App
