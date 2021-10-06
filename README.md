@@ -1,5 +1,63 @@
 # 정서연 202030428
 
+## [ 10월 6일 ]
+## 영화 앱 만들기 워밍업
+### ✔ 영화 데이터 로딩상태 표시하기
+```javascript
+import React from "react"
+
+class App extends React.Component {
+    state = {
+        isLoading: true,
+        movies: []
+    }
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({ isLoading: false })
+        }, 6000)
+    }
+    render() {
+        const { isLoading } = this.state
+        return (
+            <div>
+                { isLoading ? 'Loading...' : '영화 데이터 출력' } // 삼항연산자
+            </div>
+        )
+    }
+}
+
+export default App
+```
+## 영화 API 사용해 보기
+- axios 설치하기
+- YTS 영화 데이터 API 살펴보기
+
+### ✔ 노마드 코더 영화 API를 영화 앱에서 호출하기
+- axios 임포트
+- axios.get() 함수의 인자에 URL 전달하여 API 호출
+
+### ✔ getMovies() 함수 기다린 다음, axios.get() 함수가 반환한 데이터 잡기
+- getMovies() 함수 안에서 axios.get()이 실행되도록 한다.
+- axios.get()의 return값은 movies에 저장
+- componentDidMount() 함수가 실행되면 this.getMovie()가 실행된다.
+- 이때 자바스크립트에게 getMovies() 함수는 시간이 필요하다는 것을 알려야 하는데 이때 사용되는 것이 async, await이다.
+
+## 영화 데이터 화면에 그리기
+### ✔ 영화 데이터 자세히 살펴보기
+- [Console]탭 data -> data -> movies 순으로 객체에 접근하면 원하는 데이터 추출
+
+### ✔ 객체에 있는 movies키에 접근하기
+```javascript
+getMovies = async () => {
+        const {
+            data: {
+                data: {movies},
+            },
+        } = await axios.get('https://yts-proxy.now.sh/list_movies.json');
+        console.log(movies)
+    }
+```
+
 ## [ 09월 29일 ]
 ### ✔ 음식 앱에 prop-types 도입하기
 - props의 값이 컴포넌트에 제대로 전달되지 않으면? props를 검사하는 방법이 필요
