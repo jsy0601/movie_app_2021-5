@@ -12,7 +12,7 @@ class App extends React.Component {
             data: {
                 data: {movies},
             },
-        } = await axios.get('https://yts-proxy.now.sh/list_movies.json');
+        } = await axios.get('https://yts-proxy.now.sh/list_movies.json?sort_by=rating');
         this.setState({movies, isLoading: false})
     }
 
@@ -21,10 +21,10 @@ class App extends React.Component {
     }
 
     render() {
-        const { isLoading } = this.state
+        const { isLoading, movies } = this.state
         return (
             <div>
-                { isLoading ? 'Loading...' : '영화 데이터 출력' }
+                { isLoading ? 'Loading...' : movies.map() }
             </div>
         )
     }
