@@ -1,4 +1,95 @@
 # 정서연 202030428
+## [ 10월 13일 ]
+> this.setState({movies: movies})로 movies state에 영화 데이터 저장. 하지만 객체의 키와 대입할 변수의 이름이 같다면 this.setState({movies}로 )코드 축약 가능
+### ✔ isLoading state true에서 false로 업데이트하기
+
+### ✔ Movie 컴포넌트 만들기
+
+### ✔ Movie.propTypes 작성하기
+- id, year, title, summary poster
+```javascript
+import PropTypes from 'prop-types'
+
+function Movie({id,title,year,summary,poster}) {
+    return (
+        <h4>{title}</h4>
+    ) 
+}
+
+Movie.propTypes = {
+    id: PropTypes.number.isRequired,
+    year: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired
+}
+
+export default Movie;
+```
+### ✔ 노마드 코더 영화 API 정렬 기능 사용
+- sort_by
+```javascript
+await axios.get('https://yts-proxy.now.sh/list_movies.json?sort_by=rating')
+```
+### ✔ App 컴포넌트에서 Movie 컴포넌트 그리기
+- map()함수 사용: 첫번째 인자로 컴포넌트를 반환하는 함수를 전달
+
+### ✔ Movie 컴포넌트에 props 전달하기
+```javascript
+  { isLoading ? 'Loading...' : movies.map((movie) => {              
+   return (
+    <Movie 
+      key={movie.id} // key props 추가
+      id={movie.id}
+      year={movie.year}
+      title={movie.title}
+      summary={movie.summary}
+      poster={movie.medium_cover_image}
+      />
+    )
+ }) }
+```
+### ✔ 영화 앱 스타일링하기
+
+### ✔ App 컴포넌트에 HTML 추가하기
+```javascript
+<section class="container">
+                { isLoading ? (
+                    <div class="loader">
+                        <span class="loader__text">Loading...</span>
+                    </div>
+                    ) : (
+                        <div class="movies">
+                        {movies.map((movie) => (
+                    <Movie 
+                        key={movie.id}
+                        id={movie.id}
+                        year={movie.year}
+                        title={movie.title}
+                        summary={movie.summary}
+                        poster={movie.medium_cover_image}
+                    />
+                ))}
+                </div>
+                )}
+            </section>
+```
+### ✔ Movie 컴포넌트에 HTML 추가하고 영화 포스터 이미지 추가하기
+```javascript
+function Movie({title,year,summary,poster}) {
+    return (
+        <div class="movie">
+            <img src={poster} alt={title} title={title} />
+            <div class="movie__data">
+                <h3 class="movie__title">{title}</h3>
+                <h5 class="movie__year">{year}</h5>
+                <p class="movie__summary">{summary}</p>
+            </div>  
+        </div>
+    ) 
+}
+```
+### ✔ CSS 파일 생성하기
 
 ## [ 10월 6일 ]
 ## 영화 앱 만들기 워밍업
