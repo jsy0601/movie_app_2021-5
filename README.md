@@ -1,4 +1,76 @@
 # 정서연 202030428
+## [ 10월 27일 ]
+### ✔ 영화 장르 출력하기
+- genres props가 배열이므로 map()함수 사용
+- genres props를 ul, li 태그로 감싸서 출력
+- key props 추가
+```javascript
+<ul className="movie-genres">
+  {genres.map((genre, index) => {
+    return <li key={index} className="movie-genre">{genre}</li>
+  })}
+</ul>
+```
+![image](https://user-images.githubusercontent.com/70794506/139005634-8baf4e6d-fd80-4730-b399-3fcd1d78eb38.png)
+### ✔ 영화 앱 멋지게 스타일링하기
+- summary props에 있는 문자열을 180자로 제한
+> slice() 함수
+> "hereisstring".slice(0,10) // "hereisstri"
+### ✔ react-router-dom 설치
+> npm install react-router-dom
+### ✔ components 폴더에 Movie 컴포넌트 옮기기
+### ✔ routes 폴더에 라우터가 보여줄 화면 만들기
+- src/routes 폴더 만들고 Home.js와 About.js 파일 생성
+### ✔ Home.js 수정하기
+- App.js 내용을 Home.js로 복사하고 컴포넌트 이름을 Home으로 수정
+### ✔ Home.css 만들기
+![image](https://user-images.githubusercontent.com/70794506/139010843-9e216f10-00e8-4436-9c4e-533f05cf1e56.png)
+### ✔ 라우터 만들어 보기
+- 라우터는 사용자가 입력한 URL을 통해 특정 컴포넌트를 불러준다.
+예) localhost:3000/about
+- HashRouter와 Route 컴포넌트 사용 (App.js에 import)
+
+### ✔ Route 컴포넌트에 path, component props 추가하기
+
+### ✔ Home 컴포넌트를 위한 Route 컴포넌트 추가하기
+- App.js
+```javascript
+import './App.css'
+import { HapshRouter, HashRouter, Route } from 'react-router-dom'
+import About from './routes/About'
+import Home from './routes/Home'
+
+function App() {
+    return (
+        <HashRouter>
+            <Route path="/" exact={true} component={Home} />
+            <Route path="/about" component={About} />
+        </HashRouter>
+    )
+}
+
+export default App;
+```
+- About.js
+```javascript
+import './About.css'
+
+function About() {
+    return (
+        <div className="about-container">
+            <span>
+                “Freedom is the freedom to say that two plus two make four. If that is granted, all else
+                follows.”
+            </span>
+            <span>- George Orwell, 1984</span>
+        </div>
+    )
+}
+
+export default About
+```
+![image](https://user-images.githubusercontent.com/70794506/139015511-4402e494-9f62-450c-b365-032df01e0f94.png)
+
 ## [ 10월 13일 ]
 > this.setState({movies: movies})로 movies state에 영화 데이터 저장. 하지만 객체의 키와 대입할 변수의 이름이 같다면 this.setState({movies}로 )코드 축약 가능
 ### ✔ isLoading state true에서 false로 업데이트하기
@@ -80,10 +152,10 @@ function Movie({title,year,summary,poster}) {
     return (
         <div class="movie">
             <img src={poster} alt={title} title={title} />
-            <div class="movie__data">
-                <h3 class="movie__title">{title}</h3>
-                <h5 class="movie__year">{year}</h5>
-                <p class="movie__summary">{summary}</p>
+            <div class="movie-data">
+                <h3 class="movie-title">{title}</h3>
+                <h5 class="movie-year">{year}</h5>
+                <p class="movie-summary">{summary}</p>
             </div>  
         </div>
     ) 
