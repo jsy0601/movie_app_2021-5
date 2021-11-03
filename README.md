@@ -1,4 +1,102 @@
 # 정서연 202030428
+## [ 11월 3일 ]
+### ✔ 내비게이션 만들어보기
+- components 폴더에 Navigation.js 파일 만들기
+
+### ✔ Navigation 컴포넌트 App 컴포넌트에 포함시키기
+- 링크를 누를 때마다 리액트가 죽고, 새 페이지가 열리는 문제(a 엘리먼트 특징 때문) -> react-router-dom의 Link 컴포넌트 사용
+
+### ✔ a 엘리먼트 Link 컴포넌트로 바꾸기
+```javascript
+import { Link } from 'react-router-dom'
+
+function Navigation() {
+    return(
+        <div>
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+        </div>
+    )
+}
+
+export default Navigation
+``` 
+- 페이지 전체가 다시 새로 고침되지 않음 -> 내비게이션이 제대로 만들어진 것
+> Link, Router 컴포넌트는 반드시 HashRouter 안에 포함되어야 한다!
+
+### ✔ Navigation 컴포넌트 스타일링하기
+![image](https://user-images.githubusercontent.com/70794506/140017239-162b08f3-9a43-430b-a8de-ee386bd0c18b.png)
+
+### ✔ 영화 상세 정보 기능 만들어 보기
+- 영화 카드를 누르면 상세 정보를 보여주는 기능 만들기
+> route props? 라우팅 대상이 되는 컴포넌트에 넘겨주는 기본 props
+
+### ✔ route props에 데이터 담아 보내기
+```javascript
+<Link to={{ pathname: '/about', state: { fromNavigation: true }}}>About</Link>
+```
+- pathname: URL 의미, state: route props에 보내줄 데이터 의미
+- /about으로 이동한 다음 [console] 탭에서 [location]을 펼쳐 보면 state 키에 보내준 데이터 확인
+
+### ✔ Movie 컴포넌트에 Link 컴포넌트 추가하기
+> import { Link } from 'react-router-dom'
+```javascript
+<Link
+                to={{
+                    pathname: '/movie-detail',
+                    state: { year, title, summary, poster, genres },
+                }}
+            >
+            ...(생략)
+</Link>
+```
+
+### ✔ Detail 컴포넌트 만들기
+- Detail.js routes 폴더에 추가
+> push, go, goBack, goForward 키 -> URL을 변경해 주는 함수
+
+### ✔ Detail 컴포넌트를 클래스형 컴포넌트로 변경하기
+
+- URL을 직접 입력해서 /movie-detail로 이동하면 location 키의 state 키가 비어 있다. 그런 경우에만 history 키의 push 함수 사용
+
+### ✔ push() 함수 사용
+```javascript
+import React from "react"
+
+class Detail extends React.Component {
+    componentDidMount() {  // Detail 컴포넌트가 마운트되면
+        const { location, history } = this.props  // 구조 분해 할당으로 location, history를 얻음
+        if(location.state === undefined) {  // location.state가 없는 경우
+            history.push('/')  // Home으로 이동시킴
+        }
+    }
+    
+    render() {
+        return <span>Hello</span>
+    }
+}
+
+export default Detail
+```
+### ✔ 영화 제목 출력하기
+- componentDidMount()에 작성한 리다이렉트 기능이 동작하지 않는다
+> 이유는 Detail 컴포넌트는 render()->compontDidMount()의 순서로 실행
+> 그래서 render()에도 compontDidMount()에 작성한 리다이렉트 코드 추가해야 함
+```javascript
+    render() {
+            const { location } = this.props
+            if (location.state){
+                return (
+                    <span>{location.state.title}</span>
+                )
+            } else {
+                return null
+            } 
+        }
+```
+# 완성!
+![image](https://user-images.githubusercontent.com/70794506/140020861-ea6859de-ad3b-4e6d-853b-886bfe936b2e.png)
+
 ## [ 10월 27일 ]
 ### ✔ 영화 장르 출력하기
 - genres props가 배열이므로 map()함수 사용
