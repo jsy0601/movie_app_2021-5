@@ -1,4 +1,111 @@
 # 정서연 202030428
+## [ 11월 10일 ]
+### ✔ 배포하기
+> ,
+  "homepage": "https://jsy0601.github.io/movie_app_2021-5"
+>"scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+> npm install gh-pages
+> npm run deploy
+
+### 이 책을 통해 만든 영화 앱: https://jsy0601.github.io/movie_app_2021-5
+
+### ✔ React의 특징
+- 상호작용이 많은 UI개발에 적합
+- 컴포넌트 로직은 JavaScript로 작성
+- 캡슐화된 컴포넌트로 개발되어 재사용이 용이
+- DOM과는 별개로 상태를 관리할 수 있음
+- 기술 스택의 나머지 부분에는 관여하지 않음
+- 기존 코드와 별개로 사용 가능 
+- React Native 이용 시 모바일 앱 가능
+
+- CDN: Content Delivery Network 또는 Content Distribution Network
+- CORS: 특정 헤더를 통해서 브라우저에게 원 출처에서 실행되고 있는 웹 애플리케이션이 다른 출처에 원하는 리소스에 접근할 수 있는 권한이 있는지 없는지를 알려주는 메커니즘이다.
+- Babel: ECMAScript 2015 + 코드를 이전 JavaScript 엔진에서 실행할 수 있는 이전 버전과 호환되는 JavaScript 버전으로 변환하는 데 주로 사용되는 무료 오픈 소스 JavaScript 트랜스 컴파일러이다.
+
+### ✔ CDN 링크
+> <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+> <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+
+### ✔ crossorigin 속성이 필요한 이유
+- CDN을 통해 React를 사용한다면, crossorigin 어트리뷰트(attribute)와 함께 사용하는 것을 권장
+> <script crossorigin src="..."></script>
+
+### ✔ JSX 빠르게 시도해보기
+- 기존 프로젝트에서 JSX 태그를 써보는 제일 빠른 방법은 이 <script> 태그를 집어넣는 것
+> <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+### ✔ 간단한 컴포넌트
+- React 컴포넌트는 render()라는 메서드를 구현하는데, 이것은 데이터를 입력받아 화면에 표시할 내용을 반환하는 역할. 
+- 이 예제에서는 XML과 유사한 문법인 JSX를 사용. 
+- 컴포넌트로 전달된 데이터는 render() 안에서 this.props를 통해 접근 가능.
+- React를 사용하기 위해서 JSX가 꼭 필요한 것은 아니다. JSX를 컴파일한 JavaScript 코드를 확인하려면 Babel REPL을 이용
+
+```javascript
+<script type="text/babel">
+  class HelloMessage extends React.Component {
+    render() {
+      return (
+        <div>
+          Hello {this.props.name}
+        </div>
+      );
+    }
+  }
+
+  ReactDOM.render(
+    <HelloMessage name="Taylor" />,
+    document.getElementById('hello-example')
+  );
+</script>
+```
+### ✔ 상태를 가지는 컴포넌트
+- 컴포넌트는 this.props를 이용해 입력 데이터를 다루는 것 외에도 내부적인 상태 데이터를 가질 수 있습니다. 
+- 이는 this.state로 접근할 수 있습니다. 
+- 컴포넌트의 상태 데이터가 바뀌면 render()가 다시 호출되어 마크업이 갱신됩니다.
+
+```javascript
+<script type="text/babel">
+        class Timer extends React.Component {
+        constructor(props) {
+            super(props)
+            this.state = { seconds: 0 }
+        }
+
+        tick() {
+            this.setState(state => ({
+            seconds: state.seconds + 1
+            }))
+        }
+
+        componentDidMount() {
+            this.interval = setInterval(() => this.tick(), 1000)
+        }
+
+        componentWillUnmount() {
+            clearInterval(this.interval)
+        }
+
+        render() {
+            return (
+            <div>
+                Seconds: {this.state.seconds}
+            </div>
+            )
+        }
+        }
+
+        ReactDOM.render(
+        <Timer />,
+        document.getElementById('timer-example')
+        )
+    </script>
+```
+
 ## [ 11월 3일 ]
 ### ✔ 내비게이션 만들어보기
 - components 폴더에 Navigation.js 파일 만들기
