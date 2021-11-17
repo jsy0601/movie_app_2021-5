@@ -1,4 +1,181 @@
 # 정서연 202030428
+## [ 11월 17일 ]
+### ✔ 애플리케이션
+- props와 state를 사용해서 간단한 Todo 애플리케이션을 만들 수 있다.
+- 이 예제에서는 state를 사용해 사용자가 입력한 텍스트와 할 일 목록을 관리
+- 이벤트 핸들러들이 인라인으로 각각 존재하는 것처럼 보이지만, 실제로는 이벤트 위임을 통해 하나로 구현
+> 유저입력 - handleChange - React의 state갱신 - form element가 React state를 참조
+- 유저 입력을 강제로 대문자로 변경할 경우에도 사용한다.
+
+### ✔ key props의 역할??
+- key는 props의 안정적으로 사용할 수 있도록 고유성을 부여하기 위해 필요하다
+- React가 어떤 props를 변경, 추가 또는 삭제할지 식별하는 것을 도와준다
+- 반드시 date를 사용하지 않아도 된다. 배열의 index삾을 사용해도 된다.
+- 유일한 값이라면 그 값이 무엇이든 상관없다.
+
+```javascript
+class TodoApp extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { items: [], text: '' } // text에 임시로 저장된다.
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  render() {
+    return (
+      <div>
+        <h3>TODO</h3>
+        <TodoList items={this.state.items} />
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="new-todo">  // JSX
+            What needs to be done?
+          </label>
+          <input
+            id="new-todo"
+            onChange={this.handleChange}
+            value={this.state.text}   // 값을 넣을 때마다 value에 바로바로 나타나짐
+          />
+          <button>
+            Add #{this.state.items.length + 1}
+          </button>
+        </form>
+      </div>
+    )
+  }
+
+  handleChange(e) {
+    this.setState({ text: e.target.value })   // State의 text값 변경
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    if (this.state.text.length === 0) {
+      return
+    }
+    const newItem = {
+      text: this.state.text,
+      id: Date.now()
+    }
+    this.setState(state => ({
+      items: state.items.concat(newItem),  // 배열 안에 넣어주기
+      text: ''  // text 초기화 -> value도 초기화
+    }))
+  }
+}
+
+class TodoList extends React.Component {
+  render() {
+    return (
+      <ul>
+        {this.props.items.map(item => (
+          <li key={item.id}>{item.text}</li>
+        ))}
+      </ul>
+    )
+  }
+}
+
+ReactDOM.render(
+  <TodoApp />,
+  document.getElementById('todos-example')
+)
+```
+### ✔ 외부 플러그인을 사용하는 컴포넌트
+- React는 유연하며 다른 라이브러리나 프레임워크를 함께 활용할 수 있다.
+- 이 예제에서는 외부 마크다운 라이브러리인 remarkable을 사용해 <textarea>의 값을 실시간으로 변환
+```javascript
+class MarkdownEditor extends React.Component {
+  constructor(props) {
+    super(props)
+    this.md = new Remarkable();   // import나 CDN 방식으로 가져오면 쓸 수 있다.(하지만 실행 동작 안 됨ㅋ)
+    this.handleChange = this.handleChange.bind(this)
+    this.state = { value: 'Hello, **world**!' }
+  }
+
+  handleChange(e) {
+    this.setState({ value: e.target.value })
+  }
+
+  getRawMarkup() {
+    return { __html: this.md.render(this.state.value) }
+  }
+
+  render() {
+    return (
+      <div className="MarkdownEditor">
+        <h3>Input</h3>
+        <label htmlFor="markdown-content">
+          Enter some markdown
+        </label>
+        <textarea
+          id="markdown-content"
+          onChange={this.handleChange}
+          defaultValue={this.state.value}
+        />
+        <h3>Output</h3>
+        <div
+          className="content"
+          dangerouslySetInnerHTML={this.getRawMarkup()}
+        />
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(
+  <MarkdownEditor />,
+  document.getElementById('markdown-example')
+)
+```
+### ✔ create-react-app으로 Remarkable 사용하기
+- npm install remarkable 후 app.js 수정
+```javascript
+import React from 'react'
+import { Remarkable } from 'remarkable'
+
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.md = new Remarkable();
+    this.handleChange = this.handleChange.bind(this)
+    this.state = { value: 'Hello, **world**!' }
+  }
+
+  handleChange(e) {
+    this.setState({ value: e.target.value })
+  }
+
+  getRawMarkup() {
+    return { __html: this.md.render(this.state.value) }
+  }
+
+  render() {
+    return (
+      <div className="MarkdownEditor">
+        <h3>Input</h3>
+        <label htmlFor="markdown-content">
+          Enter some markdown
+        </label>
+        <textarea
+          id="markdown-content"
+          onChange={this.handleChange}
+          defaultValue={this.state.value}
+        />
+        <h3>Output</h3>
+        <div
+          className="content"
+          dangerouslySetInnerHTML={this.getRawMarkup()}
+        />
+      </div>
+    )
+  }
+}
+// index.js에 id="root"있기 때문에 ReactDOM 필요 없음
+
+export default App;
+```
+
 ## [ 11월 10일 ]
 ### ✔ 배포하기
 > ,
