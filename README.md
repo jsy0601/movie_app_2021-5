@@ -1,4 +1,60 @@
 # 정서연 202030428
+## [ 11월 24일 ]
+## 설치
+### ✔ 시작하기
+- 온라인 코드 편집기: CodePen, CodeSandbox, Stackblitz
+- CodeSandbox는 create-react-app으로 생성된 프로젝트와 동일한 환경에서 테스트 가능
+- CDN방식으로 간편하게 테스트 가능하도록 HTML코드 제공
+- Tania Rascia가 쓴 React 개요
+> JavaScript 내용이 혼동될 때마다, MDN과 javascript.info는 참고하기 좋은 웹사이트입니다. 
+## 주요개념
+### ✔ JSX 소개
+- 변수를 JSX에 표현식 포함하기
+- 함수의 호출 결과를 JSX에 표현식 포함하기
+- if, for문 등과 함께 사용, 변수에 할당, 인자로 받고 함수로부터 반환
+- 어트리뷰트에 따옴표를 이용해 문자열 리터럴 정의
+- 중괄호를 사용하여 어트리뷰트에 JavaScript 표현식 삽입 가능
+- 태그가 비어있다면 XML처럼 /> 를 이용해 바로 닫아주기
+- Babel은 JSX를 React.createElement() 호출로 컴파일
+### 매개변수(parameter) vs 인자(argument)
+> 매개변수는 함수나 클래스를 선언할 때 function 괄호 안에 들어가고 인자는 호출할 때 씀
+### ✔ 엘리먼트 렌더링
+- 엘리먼트는 React 앱의 가장 작은 단위
+- React 엘리먼트를 루트 DOM 노드에 렌더링하려면 둘 다 ReactDOM.render()로 전달
+- UI를 업데이트하는 유일한 방법은 새로운 엘리먼트를 생성하고 이를 ReactDOM.render()로 전달하는 것
+- React DOM은 해당 엘리먼트와 그 자식 엘리먼트를 이전의 엘리먼트와 비교하고 DOM을 원하는 상태로 만드는데 필요한 경우에만 DOM을 업데이트
+### 똑딱거리는 시계
+```javascript
+function tick() {
+  const element = (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {new Date().toLocaleTimeString()}.</h2>
+    </div>
+  );
+  ReactDOM.render(element, document.getElementById('root'));
+}
+
+setInterval(tick, 1000);
+```
+### ✔ Component와 Props
+- React에는 함수 컴포넌트와 클래스 컴포넌트가 있다
+- 컴포넌트의 이름은 항상 대문자로 시작
+- 문서 '컴포넌트 렌더링' 예제의 실행 과정은 다음과 같다
+1. <Welcome name="Sera" /> 엘리먼트로 ReactDOM.render()를 호출
+2. React는 {name: 'Sara'}를 props로 하여 Welcome 컴포넌트를 호출
+3. Welcome 컴포넌트는 결과적으로 <h1>Hello, Sara</h1> 엘리먼트를 반환
+4. React DOM은 <h1>Hello, Sara</h1> 엘리먼트와 일치하도록 DOM을 효율적으로 업데이트
+- 컴포넌트는 자신의 출력에 다른 컴포넌트를 참조할 수 있다
+- 모든 React 컴포넌트는 자신의 props를 다룰 때 반드시 순수 함수처럼 동작해야 한다
+### ✔ State and Lifecycle
+- 다섯 단계로 Clock과 같은 함수 컴포넌트를 클래스로 변환
+1. React.Component를 확장하는 동일한 이름의 ES6 class를 생성합니다.
+2. render()라고 불리는 빈 메서드를 추가합니다.
+3. 함수의 내용을 render() 메서드 안으로 옮깁니다.
+4. render() 내용 안에 있는 props를 this.props로 변경합니다.
+5. 남아있는 빈 함수 선언을 삭제합니다.
+
 ## [ 11월 17일 ]
 ### ✔ 애플리케이션
 - props와 state를 사용해서 간단한 Todo 애플리케이션을 만들 수 있다.
@@ -146,7 +202,7 @@ class App extends React.Component {
     this.setState({ value: e.target.value })
   }
 
-  getRawMarkup() {
+  getRawMarkup() {    // 마크업을 받아서 html로 바로 뿌려줌
     return { __html: this.md.render(this.state.value) }
   }
 
