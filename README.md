@@ -1,4 +1,154 @@
 # 정서연 202030428
+## [ 12월 01일 ]
+### ✔ 함수에서 클래스로 변환하기
+1. React.Component를 확장하는 동일한 이름의 ES6 class를 생성
+2. render()라고 불리는 빈 메서드를 추가
+3. 함수의 내용을 render() 메서드 안으로 이동
+4. render() 내용 안에 있는 props를 this.props로 변경
+5. 남아있는 빈 함수 선언을 삭제
+- 함수
+```javascript
+function Clock(props) {
+  return (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {props.date.toLocaleTimeString()}.</h2>
+    </div>
+  );
+}
+function tick() {
+  ReactDOM.render(
+    <Clock date={new Date()} />,
+    document.getElementById('root')
+  );
+}
+
+setInterval(tick, 1000);
+```
+- 클래스
+```javascript
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {date: new Date()};  // 보여지는 부분
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Clock />,
+  document.getElementById('root')
+);
+```
+### ✔ State를 올바르게 사용하기
+- this.state를 지정할 수 있는 유일한 공간은 바로 constructor
+- this.props와 this.state가 비동기적으로 업데이트될 수 있기 때문에 다음 state를 계산할 때 해당 값에 의존해서는 안 됨!!
+```javascript
+this.setState({
+  counter: this.state.counter + this.props.increment,
+});
+```
+```javascript
+this.setState(function(state, props) {
+  return {
+    counter: state.counter + props.increment
+  };
+});
+```
+- State 업데이트는 병합이 된다
+- setState()를 호출할 때 React는 제공한 객체를 현재 state로 병합
+- 별도의 setState() 호출로 이러한 변수를 독립적으로 업데이트 가능
+- state는 종종 로컬 또는 캡슐화
+- state가 소유하고 설정한 컴포넌트 이외에는 어떠한 컴포넌트에도 접근할 수 없다
+- 컴포넌트는 자신의 state를 자식 컴포넌트에 props로 전달
+
+### ✔ 이벤트 처리하기
+- React 엘리먼트에서 이벤트를 처리하는 방식은 DOM 엘리먼트에서 이벤트를 처리하는 방식과 매우 유사
+- React의 이벤트는 소문자 대신 캐멀 케이스(camelCase)를 사용
+- JSX를 사용하여 문자열이 아닌 함수로 이벤트 핸들러를 전달
+- React에서는 false를 반환해도 기본 동작을 방지할 수 없다. 반드시 preventDefault를 명시적으로 호출해야 한다. 
+### ✔ 조건부 렌더링
+- React에서 조건부 렌더링은 JavaScript에서의 조건 처리와 같이 동작
+-  if 나 조건부 연산자 와 같은 JavaScript 연산자를 현재 상태를 나타내는 엘리먼트를 만드는 데에 사용
+### ✔ 엘리먼트 변수
+- 엘리먼트를 저장하기 위해 변수를 사용 가능
+- 출력의 다른 부분은 변하지 않은 채로 컴포넌트의 일부를 조건부로 렌더링
+- 아래의 예시에서는 LoginControl이라는 유상태 컴포넌트 를 만들 것
+- 이 컴포넌트는 현재 상태에 맞게 <LoginButton />이나 <LogoutButton />을 렌더링 또한 이전 예시에서의 <Greeting />도 함께 렌더링
+```javascript
+class LoginControl extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.handleLogoutClick = this.handleLogoutClick.bind(this);
+    this.state = {isLoggedIn: false};
+  }
+
+  handleLoginClick() {
+    this.setState({isLoggedIn: true});
+  }
+
+  handleLogoutClick() {
+    this.setState({isLoggedIn: false});
+  }
+
+  render() {
+    const isLoggedIn = this.state.isLoggedIn;
+    let button;
+    if (isLoggedIn) {
+      button = <LogoutButton onClick={this.handleLogoutClick} />; // 엘리먼트 변수
+    } else {
+      button = <LoginButton onClick={this.handleLoginClick} />;
+    }
+
+    return (
+      <div>
+        <Greeting isLoggedIn={isLoggedIn} />
+        {button}
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <LoginControl />,
+  document.getElementById('root')
+);
+```
+### ✔ 논리 && 연산자로 If를 인라인으로 표현하기
+- JSX 안에는 중괄호를 이용해서 표현식을 포함 할 수 있다
+- 그 안에 JavaScript의 논리 연산자 &&를 사용하면 쉽게 엘리먼트를 조건부로 넣을 수 있다
+### ✔ 조건부 연산자로 If-Else구문 인라인으로 표현하기
+- 엘리먼트를 조건부로 렌더링하는 다른 방법은 조건부 연산자인 condition ? true: false를 사용하는 것
+- 조건이 너무 복잡하다면 컴포넌트를 분리하기 좋을 때 일 수도 있다는 것을 기억
+### ✔ 컴포넌트가 렌더링하는 것을 막기
+- 가끔 다른 컴포넌트에 의해 렌더링될 때 컴포넌트 자체를 숨기고 싶을 때 렌더링 결과를 출력하는 대신 null을 봔환하면 해결 가능
+
 ## [ 11월 24일 ]
 ## 설치
 ### ✔ 시작하기
