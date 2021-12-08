@@ -1,4 +1,247 @@
 # 정서연 202030428
+## [ 12월 08일 ]
+### ✔ 리스트와 key
+- 배열의 값을 반환할 때는 map()함수를 사용. 변환하여 반환하는 것도 가능
+### ✔ 여러개의 컴포넌트 렌더링 하기
+- 엘리먼트 모음을 만들고 중괄호 {}를 이용하여 JSX에 포함 
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map((number) =>
+  <li>{number}</li>
+);
+```
+### ✔ 기본 리스트 컴포넌트
+- 일반적으로 컴포넌트 안에서 리스트를 렌더링
+- 이전 예시를 numbers 배열을 받아서 순서 없는 엘리먼트 리스트를 출력하는 컴포넌트로 리팩토링할 수 있다.
+-  “key”는 엘리먼트 리스트를 만들 때 포함해야 하는 특수한 문자열 어트리뷰트
+```javascript
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <li key={number.toString()}>
+      {number}
+    </li>
+  );
+  return (
+    <ul>{listItems}</ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+```
+### ✔ Key
+- Key는 React가 어떤 항목을 변경, 추가 또는 삭제할지 식별
+- key는 엘리먼트에 안정적인 고유성을 부여하기 위해 배열 내부의 엘리먼트에 지정
+- index를 key로 사용하는 것은 좋지 않음.
+- Key를 선택하는 가장 좋은 방법은 리스트의 다른 항목들 사이에서 해당 항목을 고유하게 식별할 수 있는 문자열을 사용하는 것
+
+### ✔ Key로 컴포넌트 추출하기
+- 키는 주변 배열의 context에서만 의미가 있다.
+- 예를 들어 ListItem 컴포넌트를 추출 한 경우 ListItem 안에 있는 <li> 엘리먼트가 아니라 배열의 <ListItem /> 엘리먼트가 key를 가져야 합니다.
+```javascript
+function ListItem(props) {
+  // 맞습니다! 여기에는 key를 지정할 필요가 없습니다.
+  return <li>{props.value}</li>;
+}
+
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    // 맞습니다! 배열 안에 key를 지정해야 합니다.
+    <ListItem key={number.toString()} value={number} />
+  );
+  return (
+    <ul>
+      {listItems}
+    </ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+```
+- Key는 배열 안에서 형제 사이에서 고유해야 하고 전체 범위에서 고유할 필요는 없다. 두 개의 다른 배열을 만들 때 동일한 key를 사용할 수 있다.
+```javascript
+const content = posts.map((post) =>
+  <Post
+    key={post.id}
+    id={post.id}
+    title={post.title} />
+);
+```
+- 위 예시에서 Post 컴포넌트는 props.id를 읽을 수 있지만 props.key는 읽을 수 없다.
+### ✔ JSX에 map() 포함시키기
+- map() 함수가 너무 중첩된다면 컴포넌트로 추출 하는 것이 좋다.
+
+### ✔ Form
+- html의 form 엘리먼트는 내부 state를 갖기 때문에 react의 다른 DOM 엘리먼트와는 다르게 동작한다
+- 만일 제시한 예가 순수한 html이라면 이 폼은 name을 입력 받고 폼을 제출하면 새로운 페이지로 이동한다
+- react에서도 동일한 동작을 원한다면 그대로 사용하면 된다
+- 그러나 일반적인 경우라면 js 함수로 폼의 제출을 처리하고 사용자가 폼에 입력한 데이터에 접근하도록 하는 것이 편리하다
+- 이를 위한 표준 방식은 "제어 컴포넌트"라고 불리는 기술을 이용하는 것이다
+```javascript
+class NameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.value} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+```
+### ✔ textarea 태그
+- html에서 textarea 엘리먼트는 텍스트를 자식으로 정의한다
+- react에서 textarea는 value 속성을 사용한다
+- 따라서 react의 textarea는 싱글 태그를 사용하여 작성한다
+✔ 문서는 "생성자에게 초기화하기 때문에 textarea는 일부 텍스트를 가진채 시작되는 점을 주의하세요."라고 쓰여 있지만 꼭 초기 값이 있어야 되는 것은 아니다.
+### ✔ select 태그
+- HTML에서 <select>는 드롭 다운 목록을 만든다
+- React에서는 selected 어트리뷰트를 사용하는 대신 최상단 select태그에 value 어트리뷰트를 사용한다
+- 전반적으로 <input type="text">, <textarea> 및 <select> 모두 매우 비슷하게 동작
+> select 태그에 multiple 옵션을 허용한다면 value 어트리뷰트에 배열을 전달할 수 있다.
+```javascript
+<select multiple={true} value={['B', 'C']}>
+```
+### ✔ file input 태그
+- HTML에서 <input type="file">는 사용자가 하나 이상의 파일을 자신의 장치 저장소에서 서버로 업로드하거나 File API를 통해 JavaScript로 조작할 수 있다
+### ✔ 다중 입력 제어하기
+- 여러 input 엘리먼트를 제어해야할 때, 각 엘리먼트에 name 어트리뷰트를 추가하고 event.target.name 값을 통해 핸들러가 어떤 작업을 할 지 선택할 수 있게 해준다
+- setState()는 자동적으로 현재 state에 일부 state를 병합하기 때문에 바뀐 부분에 대해서만 호출하면 된다.
+### ✔ 제어되는 Input Null 값
+- 제어 컴포넌트에 value prop을 지정하면 의도하지 않는 한 사용자가 변경할 수 없다 
+- value를 설정했는데 여전히 수정할 수 있다면 실수로 value를 undefined나 null로 설정했을 수 있다
+
+### ✔ State를 parents component로 올리기
+- 종종 동일한 데이터에 대한 변경사항을 여러 컴포넌트에 반영해야 할 필요가 있다. 이럴 때는 가장 가까운 공통 조상으로 state를 끌어올리는 것이 좋다.
+- 주어진 온도에서 물이 끓는지 여부를 추정하는 온도 계산기
+```javascript
+function BoilingVerdict(props) {
+  if (props.celsius >= 100) {
+    return <p>The water would boil.</p>;
+  }
+  return <p>The water would not boil.</p>;
+}
+```
+```javascript
+class Calculator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = {temperature: ''};
+  }
+
+  handleChange(e) {
+    this.setState({temperature: e.target.value});
+  }
+
+  render() {
+    const temperature = this.state.temperature;
+    return (
+      <fieldset>
+        <legend>Enter temperature in Celsius:</legend>
+        <input
+          value={temperature}
+          onChange={this.handleChange} />
+        <BoilingVerdict
+          celsius={parseFloat(temperature)} />
+      </fieldset>
+    );
+  }
+}
+```
+
+### ✔ 합성 (Composition) vs 상속 (Inheritance)
+- React는 강력한 합성 모델을 가지고 있으며, 상속 대신 합성을 사용하여 컴포넌트 간에 코드를 재사용하는 것이 좋다
+### ✔ 컴포넌트에서 다른 컴포넌트를 담기
+- 어떤 컴포넌트들은 어떤 자식 엘리먼트가 들어올 지 미리 예상할 수 없는 경우가 있다. 
+- 범용적인 ‘박스’ 역할을 하는 Sidebar 혹은 Dialog와 같은 컴포넌트에서 특히 자주 볼 수 있다.
+- 이러한 컴포넌트에서는 특수한 children prop을 사용하여 자식 엘리먼트를 출력에 그대로 전달하는 것이 좋다.
+```javascript
+function FancyBorder(props) {
+  return (
+    <div className={'FancyBorder FancyBorder-' + props.color}>
+      {props.children}
+    </div>
+  );
+}
+```
+- 이러한 방식으로 다른 컴포넌트에서 JSX를 중첩하여 임의의 자식을 전달할 수 있다
+```javascript
+function WelcomeDialog() {
+  return (
+    <FancyBorder color="blue">
+      <h1 className="Dialog-title">
+        Welcome
+      </h1>
+      <p className="Dialog-message">
+        Thank you for visiting our spacecraft!
+      </p>
+    </FancyBorder>
+  );
+}
+```
+
+### ✔ React로 사고하기
+- 1단계: UI를 컴포넌트 계층 구조로 나누기
+- 2단계: React로 정적인 버전 만들기
+- 3단계: UI state에 대한 최소한의 (하지만 완전한) 표현 찾아내기
+- 4단계: State가 어디에 있어야 할 지 찾기
+- 5단계: 역방향 데이터 흐름 추가하기
+
+### ✔ Hook의 개요
+- Hook은 React 버전 16.8부터 React 요소로 새로 추가되었다. Hook을 이용하여 기존 Class 바탕의 코드를 작성할 필요 없이 상태 값과 여러 React의 기능을 사용할 수 있다.
+```javascript
+import React, { useState } from 'react';
+
+function Example() {
+  // "count"라는 새로운 상태 값을 정의합니다.
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+- useState는 우리가 “Hook”에서 처음 배우게 될 함수
+### ✔ 점진적 적용 전략
+> 요약: React로부터 Class를 제거할 계획은 없다.
+- 결정적으로, Hook은 존재하는 코드와 함께 나란히 작동함으로써 점진적으로 적용할 수 있다.
+
+
 ## [ 12월 01일 ]
 ### ✔ 함수에서 클래스로 변환하기
 1. React.Component를 확장하는 동일한 이름의 ES6 class를 생성
